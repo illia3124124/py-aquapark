@@ -10,18 +10,17 @@ class IntegerRange:
     def __set_name__(self, owner: type, name: str) -> None:
         self._protected_name = "_" + name
 
-    def __set__(self, instance: object, value: int) -> None | IntegerRange:
+    def __set__(self, instance: object, value: int) -> None:
         if not isinstance(value, int):
             raise TypeError("Value must be an integer.")
         if not (self.min_amount <= value <= self.max_amount):
             raise ValueError(f"Value must be between {self.min_amount} "
                              f"and {self.max_amount}.")
-        if instance is None:
-            return self
-        return getattr(instance, self._protected_name, None)
         setattr(instance, self._protected_name, value)
 
-    def __get__(self, instance: object, owner: type) -> int:
+    def __get__(self, instance: object, owner: type) -> int | IntegerRange:
+        if instance is None:
+            return self
         return getattr(instance, self._protected_name, None)
 
 
